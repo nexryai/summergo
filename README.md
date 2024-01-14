@@ -1,0 +1,2 @@
+# summergo
+Summaly for golang
