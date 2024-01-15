@@ -5,44 +5,49 @@ import (
 	"fmt"
 	"github.com/nexryai/archer"
 	"golang.org/x/net/html"
+	"io"
 	"net/http"
 	"net/url"
 )
 
 func getPageTitle(doc *html.Node) string {
-	return analyzeNode(doc, []*findParam{
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "og:title", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "name", attrValue: "twitter:title", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "twitter:title", targetKey: "content"},
-		&findParam{tagName: "title"},
-	}...)
+	return analyzeNode(
+		doc,
+		[]*findParam{
+			{tagName: "meta", attrKey: "property", attrValue: "og:title", targetKey: "content"},
+			{tagName: "meta", attrKey: "name", attrValue: "twitter:title", targetKey: "content"},
+			{tagName: "meta", attrKey: "property", attrValue: "twitter:title", targetKey: "content"},
+			{tagName: "title"},
+		}...,
+	)
 }
 
 func getPageDescription(doc *html.Node) string {
 	return analyzeNode(doc, []*findParam{
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "og:description", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "name", attrValue: "twitter:description", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "twitter:description", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "name", attrValue: "description", targetKey: "content"},
+		{tagName: "meta", attrKey: "property", attrValue: "og:description", targetKey: "content"},
+		{tagName: "meta", attrKey: "name", attrValue: "twitter:description", targetKey: "content"},
+		{tagName: "meta", attrKey: "property", attrValue: "twitter:description", targetKey: "content"},
+		{tagName: "meta", attrKey: "name", attrValue: "description", targetKey: "content"},
 	}...)
 }
 
 func getPageImage(doc *html.Node) string {
 	return analyzeNode(doc, []*findParam{
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "og:image", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "name", attrValue: "twitter:image", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "twitter:image", targetKey: "content"},
-		&findParam{tagName: "link", attrKey: "rel", attrValue: "image_src", targetKey: "href"},
-		&findParam{tagName: "link", attrKey: "rel", attrValue: "apple-touch-icon", targetKey: "href"},
-		&findParam{tagName: "link", attrKey: "rel", attrValue: "apple-touch-icon image_src", targetKey: "href"},
+		{tagName: "meta", attrKey: "property", attrValue: "og:image", targetKey: "content"},
+		{tagName: "meta", attrKey: "name", attrValue: "twitter:image", targetKey: "content"},
+		{tagName: "meta", attrKey: "property", attrValue: "twitter:image", targetKey: "content"},
+		{tagName: "link", attrKey: "rel", attrValue: "image_src", targetKey: "href"},
+		{tagName: "link", attrKey: "rel", attrValue: "apple-touch-icon", targetKey: "href"},
+		{tagName: "link", attrKey: "rel", attrValue: "apple-touch-icon image_src", targetKey: "href"},
 	}...)
 }
 
 func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
-	res := analyzeNode(doc, []*findParam{
-		&findParam{tagName: "meta", attrKey: "property", attrValue: "og:site_name", targetKey: "content"},
-		&findParam{tagName: "meta", attrKey: "name", attrValue: "twitter:site", targetKey: "content"},
-	}...)
+	res := analyzeNode(doc,
+		[]*findParam{
+			{tagName: "meta", attrKey: "property", attrValue: "og:site_name", targetKey: "content"},
+			{tagName: "meta", attrKey: "name", attrValue: "twitter:site", targetKey: "content"},
+		}...)
 
 	if res == "" {
 		res = parsedUrl.Host
@@ -53,8 +58,8 @@ func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
 
 func GetFavicon(doc *html.Node, parsedUrl url.URL) string {
 	res := analyzeNode(doc, []*findParam{
-		&findParam{tagName: "link", attrKey: "rel", attrValue: "shortcut icon", targetKey: "href"},
-		&findParam{tagName: "link", attrKey: "rel", attrValue: "icon", targetKey: "href"},
+		{tagName: "link", attrKey: "rel", attrValue: "shortcut icon", targetKey: "href"},
+		{tagName: "link", attrKey: "rel", attrValue: "icon", targetKey: "href"},
 	}...)
 
 	if res == "" {
@@ -85,7 +90,12 @@ func Summarize(siteUrl string) (*Summary, error) {
 		return nil, errors.New("non-200 status code")
 	}
 
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			panic(err)
+		}
+	}(resp.Body)
 
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
