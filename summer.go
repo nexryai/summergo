@@ -54,7 +54,7 @@ func isSensitive(doc *html.Node, parsedUrl url.URL) bool {
 	}
 }
 
-func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
+func getSiteName(doc *html.Node, parsedUrl url.URL) string {
 	res := analyzeNode(doc, []*findParam{
 		{tagName: "meta", attrKey: "property", attrValue: "og:site_name", targetKey: "content"},
 		{tagName: "meta", attrKey: "name", attrValue: "twitter:site", targetKey: "content"},
@@ -67,7 +67,7 @@ func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
 	return res
 }
 
-func GetFavicon(doc *html.Node, parsedUrl url.URL) string {
+func getFavicon(doc *html.Node, parsedUrl url.URL) string {
 	res := analyzeNode(doc, []*findParam{
 		{tagName: "link", attrKey: "rel", attrValue: "shortcut icon", targetKey: "href"},
 		{tagName: "link", attrKey: "rel", attrValue: "icon", targetKey: "href"},
@@ -122,8 +122,8 @@ func Summarize(siteUrl string) (*Summary, error) {
 		Title:       getPageTitle(doc),
 		Description: getPageDescription(doc),
 		Thumbnail:   getPageImage(doc),
-		SiteName:    GetSiteName(doc, *parsedUrl),
-		Icon:        GetFavicon(doc, *parsedUrl),
+		SiteName:    getSiteName(doc, *parsedUrl),
+		Icon:        getFavicon(doc, *parsedUrl),
 		ActivityPub: getActivityPubLink(doc),
 		Sensitive:   isSensitive(doc, *parsedUrl),
 	}, nil
