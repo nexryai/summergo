@@ -38,44 +38,34 @@ func getPageImage(doc *html.Node) string {
 	}...)
 }
 
-func GetSiteName(doc *html.Node, siteUrl string) string {
+func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
 	res := analyzeNode(doc, []*findParam{
 		&findParam{tagName: "meta", attrKey: "property", attrValue: "og:site_name", targetKey: "content"},
 		&findParam{tagName: "meta", attrKey: "name", attrValue: "twitter:site", targetKey: "content"},
 	}...)
 
 	if res == "" {
-		u, urlErr := url.Parse(siteUrl)
-		if urlErr != nil {
-			return ""
-		} else {
-			res = u.Host
-		}
+		res = parsedUrl.Host
 	}
 
 	return res
 }
 
-func GetFavicon(doc *html.Node, siteUrl string) string {
+func GetFavicon(doc *html.Node, parsedUrl url.URL) string {
 	res := analyzeNode(doc, []*findParam{
 		&findParam{tagName: "link", attrKey: "rel", attrValue: "shortcut icon", targetKey: "href"},
 		&findParam{tagName: "link", attrKey: "rel", attrValue: "icon", targetKey: "href"},
 	}...)
 
 	if res == "" {
-		u, urlErr := url.Parse(siteUrl)
-		if urlErr != nil {
-			return ""
-		} else {
-			res = fmt.Sprintf("https://%s/favicon.ico", u.Host)
-		}
+		res = fmt.Sprintf("https://%s/favicon.ico", parsedUrl.Host)
 	}
 
 	return res
 }
 
-func Summarize(url string) (*Summary, error) {
-	req, newReqErr := http.NewRequest("GET", url, nil)
+func Summarize(siteUrl string) (*Summary, error) {
+	req, newReqErr := http.NewRequest("GET", siteUrl, nil)
 
 	// User-Agentを設定
 	// ブラウザっぽくするのはお行儀的に微妙かもしれないので変えられるようにする？
@@ -102,11 +92,16 @@ func Summarize(url string) (*Summary, error) {
 		return nil, errors.New("failed to parse html")
 	}
 
+	parsedUrl, err := url.Parse(siteUrl)
+	if err != nil {
+		return nil, errors.New("failed to parse url")
+	}
+
 	return &Summary{
 		Title:       getPageTitle(doc),
 		Description: getPageDescription(doc),
 		Thumbnail:   getPageImage(doc),
-		SiteName:    GetSiteName(doc, url),
-		Icon:        GetFavicon(doc, url),
+		SiteName:    GetSiteName(doc, *parsedUrl),
+		Icon:        GetFavicon(doc, *parsedUrl),
 	}, nil
 }
