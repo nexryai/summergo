@@ -10,6 +10,7 @@ type summarizeTest struct {
 	ExpectError          bool
 	TitleWillEmpty       bool
 	DescriptionWillEmpty bool
+	ExpectActivityPub    bool
 }
 
 var summarizeTests = []summarizeTest{
@@ -22,6 +23,10 @@ var summarizeTests = []summarizeTest{
 	},
 	{
 		Url: "https://log.sda1.net/blog/how-to-use-rootless-docker/",
+	},
+	{
+		Url:               "https://nyan.sda1.net/notes/9oi4vq8a27",
+		ExpectActivityPub: true,
 	},
 	{
 		Url:         "https://sda1.net:3000",
@@ -58,6 +63,8 @@ func TestSummarize(t *testing.T) {
 			t.Errorf("title should not be empty: %v", summary)
 		} else if summary.Description == "" && !test.DescriptionWillEmpty {
 			t.Errorf("description should not be empty: %v", summary)
+		} else if summary.ActivityPub == "" && test.ExpectActivityPub {
+			t.Errorf("activitypub should not be empty: %v", summary)
 		}
 	}
 }

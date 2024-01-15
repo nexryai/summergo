@@ -40,6 +40,12 @@ func getPageImage(doc *html.Node) string {
 	}...)
 }
 
+func getActivityPubLink(doc *html.Node) string {
+	return analyzeNode(doc, []*findParam{
+		{tagName: "link", attrKey: "type", attrValue: "application/activity+json", targetKey: "href"},
+	}...)
+}
+
 func isSensitive(doc *html.Node, parsedUrl url.URL) bool {
 	if strings.Contains("mixi.co.jp", parsedUrl.Host) && analyzeNode(doc, []*findParam{{tagName: "meta", attrKey: "property", attrValue: "mixi:content-rating", targetKey: "content"}}...) == "1" {
 		return true
@@ -118,6 +124,7 @@ func Summarize(siteUrl string) (*Summary, error) {
 		Thumbnail:   getPageImage(doc),
 		SiteName:    GetSiteName(doc, *parsedUrl),
 		Icon:        GetFavicon(doc, *parsedUrl),
+		ActivityPub: getActivityPubLink(doc),
 		Sensitive:   isSensitive(doc, *parsedUrl),
 	}, nil
 }
