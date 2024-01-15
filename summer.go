@@ -11,15 +11,12 @@ import (
 )
 
 func getPageTitle(doc *html.Node) string {
-	return analyzeNode(
-		doc,
-		[]*findParam{
-			{tagName: "meta", attrKey: "property", attrValue: "og:title", targetKey: "content"},
-			{tagName: "meta", attrKey: "name", attrValue: "twitter:title", targetKey: "content"},
-			{tagName: "meta", attrKey: "property", attrValue: "twitter:title", targetKey: "content"},
-			{tagName: "title"},
-		}...,
-	)
+	return analyzeNode(doc, []*findParam{
+		{tagName: "meta", attrKey: "property", attrValue: "og:title", targetKey: "content"},
+		{tagName: "meta", attrKey: "name", attrValue: "twitter:title", targetKey: "content"},
+		{tagName: "meta", attrKey: "property", attrValue: "twitter:title", targetKey: "content"},
+		{tagName: "title"},
+	}...)
 }
 
 func getPageDescription(doc *html.Node) string {
@@ -43,11 +40,10 @@ func getPageImage(doc *html.Node) string {
 }
 
 func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
-	res := analyzeNode(doc,
-		[]*findParam{
-			{tagName: "meta", attrKey: "property", attrValue: "og:site_name", targetKey: "content"},
-			{tagName: "meta", attrKey: "name", attrValue: "twitter:site", targetKey: "content"},
-		}...)
+	res := analyzeNode(doc, []*findParam{
+		{tagName: "meta", attrKey: "property", attrValue: "og:site_name", targetKey: "content"},
+		{tagName: "meta", attrKey: "name", attrValue: "twitter:site", targetKey: "content"},
+	}...)
 
 	if res == "" {
 		res = parsedUrl.Host
