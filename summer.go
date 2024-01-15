@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 func getPageTitle(doc *html.Node) string {
@@ -37,6 +38,14 @@ func getPageImage(doc *html.Node) string {
 		{tagName: "link", attrKey: "rel", attrValue: "apple-touch-icon", targetKey: "href"},
 		{tagName: "link", attrKey: "rel", attrValue: "apple-touch-icon image_src", targetKey: "href"},
 	}...)
+}
+
+func isSensitive(doc *html.Node, parsedUrl url.URL) bool {
+	if strings.Contains("mixi.co.jp", parsedUrl.Host) && analyzeNode(doc, []*findParam{{tagName: "meta", attrKey: "property", attrValue: "mixi:content-rating", targetKey: "content"}}...) == "1" {
+		return true
+	} else {
+		return false
+	}
 }
 
 func GetSiteName(doc *html.Node, parsedUrl url.URL) string {
@@ -109,5 +118,6 @@ func Summarize(siteUrl string) (*Summary, error) {
 		Thumbnail:   getPageImage(doc),
 		SiteName:    GetSiteName(doc, *parsedUrl),
 		Icon:        GetFavicon(doc, *parsedUrl),
+		Sensitive:   isSensitive(doc, *parsedUrl),
 	}, nil
 }
