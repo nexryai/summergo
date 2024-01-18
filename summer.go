@@ -246,6 +246,11 @@ func Summarize(siteUrl string) (*Summary, error) {
 
 	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 SummerGo/0.1")
 
+	// :)
+	if parsedUrl.Host == "twitter.com" || parsedUrl.Host == "x.com" {
+		req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)")
+	}
+
 	requester := archer.SecureRequest{
 		Request: req,
 		TimeOut: 10,
@@ -257,7 +262,7 @@ func Summarize(siteUrl string) (*Summary, error) {
 	if respErr != nil {
 		return nil, errors.New("failed to send request")
 	} else if resp.StatusCode != 200 {
-		return nil, errors.New("non-200 status code")
+		return nil, errors.New("non-200 status code: " + resp.Status)
 	}
 
 	defer func(Body io.ReadCloser) {
