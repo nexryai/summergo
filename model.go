@@ -1,19 +1,19 @@
 package summergo
 
 type Player struct {
-	Url               string   `json:"url"`
-	Width             int      `json:"width"`
-	Height            int      `json:"height"`
-	IframePermissions []string `json:"allow"`
+	Url               string   `json:"url,omitempty"`
+	Width             int      `json:"width,omitempty"`
+	Height            int      `json:"height,omitempty"`
+	IframePermissions []string `json:"allow,omitempty"`
 }
 
 type Summary struct {
 	Title       string `json:"title"`
 	Icon        string `json:"icon"`
-	Description string `json:"description"`
-	Thumbnail   string `json:"thumbnail"`
+	Description string `json:"description,omitempty"`
+	Thumbnail   string `json:"thumbnail,omitempty"`
 	SiteName    string `json:"sitename"`
-	Player      Player `json:"player"`
+	Player      Player `json:"player,omitempty"`
 	Sensitive   bool   `json:"sensitive"`
-	ActivityPub string `json:"activitypub"`
+	ActivityPub string `json:"activitypub,omitempty"`
 }
