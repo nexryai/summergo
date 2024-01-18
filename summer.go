@@ -220,12 +220,22 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader) (*Summary, error) {
 		}
 	}
 
+	title := getPageTitle(doc)
+	description := getPageDescription(doc)
+	siteName := getSiteName(doc, siteUrl)
+
+	if isShiftJis(doc) {
+		title = convertShiftJisToUtf8(title)
+		description = convertShiftJisToUtf8(description)
+		siteName = convertShiftJisToUtf8(siteName)
+	}
+
 	return &Summary{
 		Url:         siteUrl.String(),
-		Title:       getPageTitle(doc),
-		Description: getPageDescription(doc),
+		Title:       title,
+		Description: description,
 		Thumbnail:   getPageImage(doc),
-		SiteName:    getSiteName(doc, siteUrl),
+		SiteName:    siteName,
 		Icon:        getFavicon(doc, siteUrl),
 		ActivityPub: getActivityPubLink(doc),
 		Sensitive:   isSensitive(doc, siteUrl),

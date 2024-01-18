@@ -21,6 +21,8 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://nyan.sda1.net/notes/9oi4vq8a27", ExpectActivityPub: true},
 	{Url: "https://sda1.net:3000", ExpectError: true},
 	{Url: "https://www.youtube.com/watch?v=zK-RUYiYLok", ExpectPlayer: true},
+	{Url: "https://www.itmedia.co.jp/mobile/articles/2401/18/news172.html"},
+	{Url: "https://akizukidenshi.com/catalog/contents2/news.aspx"},
 	//{Url: "https://twitter.com/honkaistarrail/status/1691299712450826240"},
 }
 
