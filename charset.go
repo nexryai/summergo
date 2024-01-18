@@ -12,9 +12,10 @@ func isShiftJis(doc *html.Node) bool {
 		{tagName: "meta", attrKey: "http-equiv", attrValue: "Content-Type", targetKey: "content"},
 		{tagName: "meta", attrKey: "http-equiv", attrValue: "content-type", targetKey: "content"},
 		{tagName: "meta", attrKey: "charset", attrValue: "Shift_JIS", targetKey: "charset"},
+		{tagName: "meta", attrKey: "charset", attrValue: "shift_jis", targetKey: "charset"},
 	}...)
 
-	if strings.Contains(contentType, "Shift_JIS") || strings.Contains(contentType, "shift_jis") {
+	if strings.Contains(strings.ToLower(contentType), "shift_jis") {
 		return true
 	} else {
 		return false
