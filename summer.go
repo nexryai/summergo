@@ -198,6 +198,8 @@ func getFavicon(doc *html.Node, parsedUrl url.URL) string {
 
 	if res == "" {
 		res = fmt.Sprintf("https://%s/favicon.ico", parsedUrl.Host)
+	} else if !strings.HasPrefix(res, "https://") {
+		res = fmt.Sprintf("https://%s%s", parsedUrl.Host, res)
 	}
 
 	return res

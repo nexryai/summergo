@@ -21,6 +21,7 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://nyan.sda1.net/notes/9oi4vq8a27", ExpectActivityPub: true},
 	{Url: "https://sda1.net:3000", ExpectError: true},
 	{Url: "https://www.youtube.com/watch?v=zK-RUYiYLok", ExpectPlayer: true},
+	{Url: "https://docs.gofiber.io/api/middleware/cache/"},
 }
 
 func TestSummarize(t *testing.T) {
