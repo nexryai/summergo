@@ -8,6 +8,7 @@ type Player struct {
 }
 
 type Summary struct {
+	Url         string `json:"url"`
 	Title       string `json:"title"`
 	Icon        string `json:"icon"`
 	Description string `json:"description,omitempty"`

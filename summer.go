@@ -221,6 +221,7 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader) (*Summary, error) {
 	}
 
 	return &Summary{
+		Url:         siteUrl.String(),
 		Title:       getPageTitle(doc),
 		Description: getPageDescription(doc),
 		Thumbnail:   getPageImage(doc),
