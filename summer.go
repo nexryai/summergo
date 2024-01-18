@@ -81,6 +81,11 @@ func getFavicon(doc *html.Node, parsedUrl url.URL) string {
 }
 
 func Summarize(siteUrl string) (*Summary, error) {
+	parsedUrl, err := url.Parse(siteUrl)
+	if err != nil {
+		return nil, errors.New("failed to parse url")
+	}
+
 	req, newReqErr := http.NewRequest("GET", siteUrl, nil)
 
 	// User-Agentを設定
@@ -111,11 +116,6 @@ func Summarize(siteUrl string) (*Summary, error) {
 	doc, err := html.Parse(resp.Body)
 	if err != nil {
 		return nil, errors.New("failed to parse html")
-	}
-
-	parsedUrl, err := url.Parse(siteUrl)
-	if err != nil {
-		return nil, errors.New("failed to parse url")
 	}
 
 	return &Summary{
