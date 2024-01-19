@@ -5,12 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"github.com/nexryai/archer"
+	"github.com/saintfish/chardet"
 	"golang.org/x/net/html"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func getPageTitle(doc *html.Node) string {
@@ -205,7 +207,7 @@ func getFavicon(doc *html.Node, parsedUrl url.URL) string {
 	return res
 }
 
-func SummarizeHtml(siteUrl url.URL, body io.Reader) (*Summary, error) {
+func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, error) {
 	doc, err := html.Parse(body)
 	if err != nil {
 		return nil, errors.New("failed to parse html")
@@ -224,7 +226,25 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader) (*Summary, error) {
 	description := getPageDescription(doc)
 	siteName := getSiteName(doc, siteUrl)
 
-	if isShiftJis(doc) {
+	// shift_jis対策
+	if charSet == "" {
+		if utf8.ValidString(title) {
+			charSet = "utf-8"
+		} else {
+			charsetDetector := chardet.NewTextDetector()
+			charsetResult, err := charsetDetector.DetectBest([]byte(title))
+			if err != nil {
+				// fallback
+				charSet = "utf-8"
+			} else {
+				charSet = strings.ToLower(charsetResult.Charset)
+			}
+		}
+	}
+
+	// そのうち他の文字コードにも対応する？
+	// FixMe: 漢字のみのテキストだとshift-jisがbig5 or GB-18030認識される場合がある
+	if charSet == "shift_jis" || charSet == "big5" || charSet == "gb-18030" {
 		title = convertShiftJisToUtf8(title)
 		description = convertShiftJisToUtf8(description)
 		siteName = convertShiftJisToUtf8(siteName)
@@ -282,5 +302,14 @@ func Summarize(siteUrl string) (*Summary, error) {
 		}
 	}(resp.Body)
 
-	return SummarizeHtml(*parsedUrl, resp.Body)
+	// サーバーからのレスポンスでcharsetを明示しているならそれを使って高速化する
+	var knownCharset string
+	contentType := resp.Header.Get("Content-Type")
+	if strings.Contains(strings.ToLower(contentType), "utf-8") {
+		knownCharset = "utf-8"
+	} else if strings.Contains(strings.ToLower(contentType), "shift_jis") {
+		knownCharset = "shift_jis"
+	}
+
+	return SummarizeHtml(*parsedUrl, resp.Body, knownCharset)
 }
