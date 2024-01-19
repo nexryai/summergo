@@ -232,12 +232,23 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 			charSet = "utf-8"
 		} else {
 			charsetDetector := chardet.NewTextDetector()
-			charsetResult, err := charsetDetector.DetectBest([]byte(title))
+			charsetResult, err := charsetDetector.DetectAll([]byte(title))
 			if err != nil {
 				// fallback
 				charSet = "utf-8"
 			} else {
-				charSet = strings.ToLower(charsetResult.Charset)
+				for _, result := range charsetResult {
+					// fmt.Printf("charset: %s, confidence: %s\n", result.Charset, result.Language)
+					// shift_jisが候補にあるならそれにする
+					if result.Charset == "Shift_JIS" {
+						charSet = "shift_jis"
+						break
+					}
+				}
+				// なければ一番高いのを使う
+				if charSet == "" {
+					charSet = charsetResult[0].Charset
+				}
 			}
 		}
 	}

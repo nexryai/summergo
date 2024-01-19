@@ -33,6 +33,8 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://akizukidenshi.com/catalog/contents2/news.aspx"},
 	// shift-jis 3
 	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C01.html", DescriptionWillEmpty: true},
+	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C02.html", DescriptionWillEmpty: true},
+	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C03.html", DescriptionWillEmpty: true},
 	// 中国語
 	{Url: "https://hsr.hoyoverse.com/zh-cn/home"},
 	{Url: "https://hsr.hoyoverse.com/zh-tw/home"},
