@@ -3,6 +3,7 @@ package summergo
 import (
 	"fmt"
 	"testing"
+	"unicode/utf8"
 )
 
 type summarizeTest struct {
@@ -18,11 +19,25 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://www.google.com/", DescriptionWillEmpty: true},
 	{Url: "https://social.sda1.net/"},
 	{Url: "https://log.sda1.net/blog/how-to-use-rootless-docker/"},
+	// ActivityPub
 	{Url: "https://nyan.sda1.net/notes/9oi4vq8a27", ExpectActivityPub: true},
+	// プライベートIP、一般的でないポートは弾かれる
+	{Url: "http://127.0.0.1", ExpectError: true},
+	{Url: "https://192.168.1.1", ExpectError: true},
 	{Url: "https://sda1.net:3000", ExpectError: true},
+	// Player
 	{Url: "https://www.youtube.com/watch?v=zK-RUYiYLok", ExpectPlayer: true},
+	// shift-jis 1
 	{Url: "https://www.itmedia.co.jp/mobile/articles/2401/18/news172.html"},
+	// shift-jis 2
 	{Url: "https://akizukidenshi.com/catalog/contents2/news.aspx"},
+	// shift-jis 3
+	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C01.html", DescriptionWillEmpty: true},
+	// 中国語
+	{Url: "https://hsr.hoyoverse.com/zh-cn/home"},
+	{Url: "https://hsr.hoyoverse.com/zh-tw/home"},
+	// 韓国語
+	{Url: "https://genshin.hoyoverse.com/ko"},
 	//{Url: "https://twitter.com/honkaistarrail/status/1691299712450826240"},
 }
 
@@ -59,6 +74,15 @@ func TestSummarize(t *testing.T) {
 			t.Errorf("activitypub should not be empty: %v", summary)
 		} else if summary.Player.Url == "" && test.ExpectPlayer {
 			t.Errorf("player should not be empty: %v", summary)
+		}
+
+		// テキストがUTF-8か
+		if summary.Title != "" && !utf8.ValidString(summary.Title) {
+			t.Errorf("title should be utf-8: %v", summary)
+		} else if summary.Description != "" && !utf8.ValidString(summary.Description) {
+			t.Errorf("description should be utf-8: %v", summary)
+		} else if summary.SiteName != "" && !utf8.ValidString(summary.SiteName) {
+			t.Errorf("sitename should be utf-8: %v", summary)
 		}
 
 		// Playerのテスト
