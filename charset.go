@@ -36,3 +36,18 @@ func convertShiftJisToUtf8(str string) string {
 
 	return utf8Str
 }
+
+func convertEucJpToUtf8(str string) string {
+	encoder := japanese.EUCJP.NewDecoder()
+
+	// 文字列をEUC-JPからUTF-8に変換
+	utf8Bytes, _, err := transform.Bytes(encoder, []byte(str))
+	if err != nil {
+		return ""
+	}
+
+	// UTF-8のバイト列を文字列に変換
+	utf8Str := string(utf8Bytes)
+
+	return utf8Str
+}

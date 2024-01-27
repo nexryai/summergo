@@ -239,8 +239,11 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 			} else {
 				for _, result := range charsetResult {
 					// fmt.Printf("charset: %s, confidence: %s\n", result.Charset, result.Language)
-					// shift_jisが候補にあるならそれにする
-					if result.Charset == "Shift_JIS" {
+					// shift_jis or euc-jpが候補にあるならそれにする
+					if result.Charset == "EUC-JP" {
+						charSet = "euc-jp"
+						break
+					} else if result.Charset == "Shift_JIS" {
 						charSet = "shift_jis"
 						break
 					}
@@ -254,11 +257,14 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 	}
 
 	// そのうち他の文字コードにも対応する？
-	// FixMe: 漢字のみのテキストだとshift-jisがbig5 or GB-18030認識される場合がある
-	if charSet == "shift_jis" || charSet == "big5" || charSet == "gb-18030" {
+	if strings.ToLower(charSet) == "shift_jis" || charSet == "big5" || charSet == "gb-18030" {
 		title = convertShiftJisToUtf8(title)
 		description = convertShiftJisToUtf8(description)
 		siteName = convertShiftJisToUtf8(siteName)
+	} else if strings.ToLower(charSet) == "euc-jp" {
+		title = convertEucJpToUtf8(title)
+		description = convertEucJpToUtf8(description)
+		siteName = convertEucJpToUtf8(siteName)
 	}
 
 	return &Summary{

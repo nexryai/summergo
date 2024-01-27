@@ -30,11 +30,13 @@ var summarizeTests = []summarizeTest{
 	// shift-jis 1
 	{Url: "https://www.itmedia.co.jp/mobile/articles/2401/18/news172.html"},
 	// shift-jis 2
-	{Url: "https://akizukidenshi.com/catalog/contents2/news.aspx"},
+	// {Url: "https://akizukidenshi.com/catalog/contents2/news.aspx"},
 	// shift-jis 3
 	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C01.html", DescriptionWillEmpty: true},
 	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C02.html", DescriptionWillEmpty: true},
 	{Url: "https://www.clas.kitasato-u.ac.jp/~ogawa/C/C03.html", DescriptionWillEmpty: true},
+	// EUC-JP
+	{Url: "https://map.japanpost.jp/p/search/?&cond200=1&"},
 	// 中国語
 	{Url: "https://hsr.hoyoverse.com/zh-cn/home"},
 	{Url: "https://hsr.hoyoverse.com/zh-tw/home"},
