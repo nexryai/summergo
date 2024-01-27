@@ -2,6 +2,7 @@ package summergo
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"unicode/utf8"
 )
@@ -27,6 +28,7 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://sda1.net:3000", ExpectError: true},
 	// Player
 	{Url: "https://www.youtube.com/watch?v=zK-RUYiYLok", ExpectPlayer: true},
+	{Url: "https://www.youtube.com/watch?v=KdbnaBhJs6Y", ExpectPlayer: true},
 	// shift-jis 1
 	{Url: "https://www.itmedia.co.jp/mobile/articles/2401/18/news172.html"},
 	// shift-jis 2
@@ -78,6 +80,11 @@ func TestSummarize(t *testing.T) {
 			t.Errorf("activitypub should not be empty: %v", summary)
 		} else if summary.Player.Url == "" && test.ExpectPlayer {
 			t.Errorf("player should not be empty: %v", summary)
+		}
+
+		// Replace youtube.com with youtube-nocookie.com
+		if strings.HasPrefix(summary.Url, "https://www.youtube.com/watch?v=") && !strings.HasPrefix(summary.Player.Url, "https://www.youtube-nocookie.com/embed/") {
+			t.Errorf("youtube.com in summary.Player.Url should be replaced by youtube-nocookie.com: %v", summary)
 		}
 
 		// テキストがUTF-8か

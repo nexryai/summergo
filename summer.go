@@ -222,6 +222,12 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 		}
 	}
 
+	if player != nil && strings.Contains(player.Url, "youtube.com/embed/") {
+		fmt.Println("youtube.com")
+		// プライバシー保護のためwww.youtube-nocookie.comに置き換える
+		player.Url = strings.Replace(player.Url, "youtube.com/embed/", "youtube-nocookie.com/embed/", 1)
+	}
+
 	title := getPageTitle(doc)
 	description := getPageDescription(doc)
 	siteName := getSiteName(doc, siteUrl)
