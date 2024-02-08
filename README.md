@@ -1,4 +1,7 @@
 ## summergo
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white) 
+[![No GPL](https://img.shields.io/badge/real_permissive-No_GPL-99CC33?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](https://log.sda1.net/blog/no-gpl-badge/)<br>
+
 Summaly for golang
 
 ### これは何
