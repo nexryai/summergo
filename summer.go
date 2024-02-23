@@ -332,6 +332,8 @@ func Summarize(siteUrl string) (*Summary, error) {
 		knownCharset = "utf-8"
 	} else if strings.Contains(strings.ToLower(contentType), "shift_jis") {
 		knownCharset = "shift_jis"
+	} else if strings.Contains(strings.ToLower(contentType), "euc-jp") {
+		knownCharset = "euc-jp"
 	}
 
 	return SummarizeHtml(*parsedUrl, resp.Body, knownCharset)
