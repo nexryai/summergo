@@ -223,7 +223,6 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 	}
 
 	if player != nil && strings.Contains(player.Url, "youtube.com/embed/") {
-		fmt.Println("youtube.com")
 		// プライバシー保護のためwww.youtube-nocookie.comに置き換える
 		player.Url = strings.Replace(player.Url, "youtube.com/embed/", "youtube-nocookie.com/embed/", 1)
 	}
@@ -246,11 +245,11 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 				for _, result := range charsetResult {
 					// fmt.Printf("charset: %s, confidence: %s\n", result.Charset, result.Language)
 					// shift_jis or euc-jpが候補にあるならそれにする
-					if result.Charset == "EUC-JP" {
-						charSet = "euc-jp"
-						break
-					} else if result.Charset == "Shift_JIS" {
+					if result.Charset == "Shift_JIS" {
 						charSet = "shift_jis"
+						break
+					} else if result.Charset == "EUC-JP" {
+						charSet = "euc-jp"
 						break
 					}
 				}
@@ -263,7 +262,7 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 	}
 
 	// そのうち他の文字コードにも対応する？
-	if strings.ToLower(charSet) == "shift_jis" || charSet == "big5" || charSet == "gb-18030" {
+	if strings.ToLower(charSet) == "shift_jis" {
 		title = convertShiftJisToUtf8(title)
 		description = convertShiftJisToUtf8(description)
 		siteName = convertShiftJisToUtf8(siteName)
