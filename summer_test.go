@@ -21,7 +21,7 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://social.sda1.net/"},
 	{Url: "https://log.sda1.net/blog/how-to-use-rootless-docker/"},
 	// ActivityPub
-	{Url: "https://nyan.sda1.net/notes/9oi4vq8a27", ExpectActivityPub: true},
+	{Url: "https://social.sda1.net/notes/9rolakyvan", ExpectActivityPub: true},
 	// プライベートIP、一般的でないポートは弾かれる
 	{Url: "http://127.0.0.1", ExpectError: true},
 	{Url: "https://192.168.1.1", ExpectError: true},
