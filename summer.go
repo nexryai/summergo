@@ -231,6 +231,13 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 	description := getPageDescription(doc)
 	siteName := getSiteName(doc, siteUrl)
 
+	// Misskeyが相対パスで返すことがあるので絶対パスに変換する
+	// そもそもここで相対パスを使っていいのか謎だけど
+	thumbnail := getPageImage(doc)
+	if strings.HasPrefix(thumbnail, "/") {
+		thumbnail = siteUrl.Scheme + "://" + siteUrl.Host + thumbnail
+	}
+
 	// shift_jis対策
 	if charSet == "" {
 		if utf8.ValidString(title) {
@@ -276,7 +283,7 @@ func SummarizeHtml(siteUrl url.URL, body io.Reader, charSet string) (*Summary, e
 		Url:         siteUrl.String(),
 		Title:       title,
 		Description: description,
-		Thumbnail:   getPageImage(doc),
+		Thumbnail:   thumbnail,
 		SiteName:    siteName,
 		Icon:        getFavicon(doc, siteUrl),
 		ActivityPub: getActivityPubLink(doc),

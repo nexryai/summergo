@@ -22,6 +22,7 @@ var summarizeTests = []summarizeTest{
 	{Url: "https://log.sda1.net/blog/how-to-use-rootless-docker/"},
 	// ActivityPub
 	{Url: "https://social.sda1.net/notes/9rolakyvan", ExpectActivityPub: true},
+	{Url: "https://misskey.io/notes/97itm23ctg", ExpectActivityPub: true},
 	// プライベートIP、一般的でないポートは弾かれる
 	{Url: "http://127.0.0.1", ExpectError: true},
 	{Url: "https://192.168.1.1", ExpectError: true},
@@ -85,6 +86,11 @@ func TestSummarize(t *testing.T) {
 		// Replace youtube.com with youtube-nocookie.com
 		if strings.HasPrefix(summary.Url, "https://www.youtube.com/watch?v=") && !strings.HasPrefix(summary.Player.Url, "https://www.youtube-nocookie.com/embed/") {
 			t.Errorf("youtube.com in summary.Player.Url should be replaced by youtube-nocookie.com: %v", summary)
+		}
+
+		// Thumbnailが絶対URLか
+		if strings.HasPrefix(summary.Thumbnail, "/") {
+			t.Errorf("thumbnail should be absolute url: %v", summary)
 		}
 
 		// テキストがUTF-8か
