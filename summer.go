@@ -307,7 +307,7 @@ func Summarize(siteUrl string) (*Summary, error) {
 	if parsedUrl.Host == "twitter.com" || parsedUrl.Host == "x.com" {
 		req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)")
 	} else {
-		req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0")
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 SuumerGo/0.1")
 	}
 
 	requester := archer.SecureRequest{
