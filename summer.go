@@ -303,11 +303,11 @@ func Summarize(siteUrl string) (*Summary, error) {
 		return nil, errors.New("failed to create request")
 	}
 
-	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 SummerGo/0.1")
-
 	// :)
 	if parsedUrl.Host == "twitter.com" || parsedUrl.Host == "x.com" {
 		req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)")
+	} else {
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0")
 	}
 
 	requester := archer.SecureRequest{
