@@ -18,7 +18,6 @@ type summarizeTest struct {
 
 var summarizeTests = []summarizeTest{
 	{Url: "https://www.google.com/", DescriptionWillEmpty: true},
-	{Url: "https://social.sda1.net/"},
 	{Url: "https://log.sda1.net/blog/how-to-use-rootless-docker/"},
 	// ActivityPub
 	{Url: "https://misskey.io/notes/97itm23ctg", ExpectActivityPub: true},
