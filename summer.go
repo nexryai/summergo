@@ -307,8 +307,10 @@ func Summarize(siteUrl string) (*Summary, error) {
 	parsedHost := parsedUrl.Host
 	if parsedHost == "twitter.com" || parsedHost == "x.com" || parsedHost == "youtube.com" || parsedHost == "www.youtube.com" || parsedHost == "youtu.be" {
 		req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)")
+	} else if parsedHost == "www.sankei.com" || parsedHost == "abema.tv" {
+		req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Safari/605.1.15")
 	} else {
-		req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0 SummerGo/0.1")
+		req.Header.Set("User-Agent", "Mozilla/5.0 (compatible; SummerGo/0.1;)")
 	}
 
 	requester := archer.SecureRequest{
