@@ -322,7 +322,7 @@ func Summarize(siteUrl string) (*Summary, error) {
 	resp, respErr := requester.Send()
 
 	if respErr != nil {
-		return nil, errors.New("failed to send request")
+		return nil, respErr
 	} else if resp.StatusCode != 200 {
 		return nil, errors.New("non-200 status code: " + resp.Status)
 	}

@@ -1,7 +1,9 @@
 package summergo
 
 import (
+	"errors"
 	"fmt"
+	"github.com/nexryai/archer"
 	"strings"
 	"testing"
 	"unicode/utf8"
@@ -9,7 +11,7 @@ import (
 
 type summarizeTest struct {
 	Url                  string
-	ExpectError          bool
+	ExpectUrlError       bool
 	TitleWillEmpty       bool
 	DescriptionWillEmpty bool
 	ExpectActivityPub    bool
@@ -22,9 +24,9 @@ var summarizeTests = []summarizeTest{
 	// ActivityPub
 	{Url: "https://misskey.io/notes/97itm23ctg", ExpectActivityPub: true},
 	// プライベートIP、一般的でないポートは弾かれる
-	{Url: "http://127.0.0.1", ExpectError: true},
-	{Url: "https://192.168.1.1", ExpectError: true},
-	{Url: "https://sda1.net:3000", ExpectError: true},
+	{Url: "http://127.0.0.1", ExpectUrlError: true},
+	{Url: "https://192.168.1.1", ExpectUrlError: true},
+	{Url: "https://sda1.net:3000", ExpectUrlError: true},
 	// Player
 	{Url: "https://www.youtube.com/watch?v=zK-RUYiYLok", ExpectPlayer: true},
 	{Url: "https://www.youtube.com/watch?v=KdbnaBhJs6Y", ExpectPlayer: true},
@@ -65,11 +67,14 @@ func TestSummarize(t *testing.T) {
 			fmt.Printf("ActivityPub: %v\n", summary.ActivityPub)
 		}
 
-		if err != nil && !test.ExpectError {
+		if err != nil && !test.ExpectUrlError {
 			t.Errorf("failed to summarize: %v", err)
-		} else if err != nil && test.ExpectError {
+		} else if err != nil && test.ExpectUrlError {
+			if !errors.Is(err, archer.ErrUnsafeUrlDetected) {
+				t.Errorf("unexpected error: %v", err)
+			}
 			continue
-		} else if test.ExpectError {
+		} else if test.ExpectUrlError {
 			t.Errorf("summarize should be failed: %v", summary)
 		} else if summary.Title == "" && !test.TitleWillEmpty {
 			t.Errorf("title should not be empty: %v", summary)
