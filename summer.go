@@ -62,9 +62,9 @@ func getPlayerFromOEmbed(doc *html.Node) *Player {
 	req.Header.Set("User-Agent", "SummerGo/0.1")
 
 	requester := archer.SecureRequest{
-		Request: req,
-		TimeOut: 10,
-		MaxSize: 1024 * 1024 * 10,
+		Request:     req,
+		TimeoutSecs: 10,
+		MaxSize:     1024 * 1024 * 10,
 	}
 
 	resp, respErr := requester.Send()
@@ -314,9 +314,9 @@ func Summarize(siteUrl string) (*Summary, error) {
 	}
 
 	requester := archer.SecureRequest{
-		Request: req,
-		TimeOut: 10,
-		MaxSize: 1024 * 1024 * 10,
+		Request:     req,
+		TimeoutSecs: 10,
+		MaxSize:     1024 * 1024 * 10,
 	}
 
 	resp, respErr := requester.Send()
