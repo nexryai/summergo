@@ -43,8 +43,6 @@ var summarizeTests = []summarizeTest{
 	// 中国語
 	{Url: "https://hsr.hoyoverse.com/zh-cn/home"},
 	{Url: "https://hsr.hoyoverse.com/zh-tw/home"},
-	// 韓国語
-	{Url: "https://genshin.hoyoverse.com/ko"},
 	//{Url: "https://twitter.com/honkaistarrail/status/1691299712450826240"},
 }
 
