@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-go@v4
-        with:
-            go-version: '1.23.0'
+      - name: Install Go
+        run: sudo snap install go --classic
 
       - name: Run Tests
         run: go test ./...
